@@ -1,0 +1,306 @@
+.layout {
+  height: 100vh;
+  height: 100dvh;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  background: linear-gradient(to right, #FF0000, #990000);
+  color: var(--white);
+  flex-shrink: 0;
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+  padding-left: 1.125rem;
+  padding-right: 1.125rem;
+  padding-bottom: 1.25rem;
+}
+
+.headerTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.headerSpacer {
+  width: 44px;
+  flex-shrink: 0;
+}
+
+.backBtn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--white);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 8px;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.backBtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  flex: 1;
+  text-align: center;
+}
+
+.appName {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--white);
+}
+
+/* Toggle switch (opt-in / opt-out) */
+.toggle {
+  flex-shrink: 0;
+  padding: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.toggleLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.02em;
+}
+
+.toggleTrack {
+  display: block;
+  width: 48px;
+  height: 26px;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.3);
+  position: relative;
+  transition: background 0.25s ease;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.15);
+}
+
+.toggleTrackOn {
+  background: #4cd964;
+}
+
+.toggleTrackRecovering {
+  background: #c0392b;
+}
+
+.toggleThumbOn,
+.toggleThumbOff {
+  position: absolute;
+  top: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  transition: left 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.toggleThumbOn {
+  left: 25px;
+}
+
+.toggleThumbOff {
+  left: 3px;
+}
+
+/* Stats row */
+.statsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.statRight {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+}
+
+.statFadeIn {
+  animation: statAppear 0.3s ease forwards;
+}
+
+@keyframes statAppear {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Overlapping donor avatar circles */
+.donorCircles {
+  position: relative;
+  width: 68px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+.circle1,
+.circle2,
+.circle3,
+.circle4 {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(255, 255, 255, 0.9);
+  top: 0;
+}
+
+.circle1 { left: 0;    z-index: 1; background: #f9c4c4; }
+.circle2 { left: 13px; z-index: 2; background: #c4dff9; }
+.circle3 { left: 26px; z-index: 3; background: #c4f9d4; }
+.circle4 { left: 39px; z-index: 4; background: #f9ecc4; }
+
+.statBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.statLabel {
+  font-size: 0.72rem;
+  opacity: 0.9;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.statValue {
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.statValueDays {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.infoBtn {
+  width: 20px;
+  height: 20px;
+  min-height: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.infoBtn:hover {
+  color: var(--white);
+}
+
+
+/* Request Blood pill button — center column of stats row */
+.requestBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.5rem 1.1rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+
+.requestBtn:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.sheetBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 200;
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.sheet {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: 100%;
+  max-width: 428px;
+  max-height: 88dvh;
+  background: var(--white);
+  border-radius: 20px 20px 0 0;
+  z-index: 201;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.15);
+}
+
+.sheetOpen {
+  transform: translateX(-50%) translateY(0);
+}
+
+.main {
+  flex: 1;
+  padding: 0;
+  padding-bottom: calc(60px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--white);
+  min-height: 0;
+}

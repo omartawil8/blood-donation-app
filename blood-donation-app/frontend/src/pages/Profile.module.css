@@ -1,0 +1,430 @@
+.page {
+  padding: 1.25rem 1rem 2rem;
+  background: var(--gray-50);
+  min-height: 100%;
+}
+
+.loadingText {
+  text-align: center;
+  color: var(--gray-500);
+  margin-top: 3rem;
+}
+
+/* Blood type hero */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--white);
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 0.875rem;
+}
+
+.bloodBadge {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid #FF0000;
+  background: #FFECEC;
+  color: #FF0000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  flex-shrink: 0;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.bloodBadge sup {
+  font-size: 0.55em;
+  vertical-align: super;
+  line-height: 0;
+  font-weight: 800;
+}
+
+.heroInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.username {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  letter-spacing: -0.01em;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.editIcon {
+  color: var(--gray-400);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.nameEditRow {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.nameInput {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  border: 1.5px solid var(--gray-300);
+  border-radius: 8px;
+  padding: 0.3rem 0.5rem;
+  outline: none;
+  width: 140px;
+  background: var(--white);
+}
+
+.nameInput:focus {
+  border-color: #FF0000;
+}
+
+.nameSaveBtn {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--white);
+  background: #FF0000;
+  border: none;
+  border-radius: 6px;
+  padding: 0.3rem 0.65rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nameSaveBtn:disabled {
+  opacity: 0.6;
+}
+
+.nameCancelBtn {
+  font-size: 0.85rem;
+  color: var(--gray-400);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.2rem 0.3rem;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 1;
+}
+
+.nameError {
+  margin: 0.2rem 0 0;
+  font-size: 0.75rem;
+  color: var(--red);
+}
+
+.subline {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+/* Stats row */
+.statsRow {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.875rem;
+}
+
+.statCard {
+  flex: 1;
+  background: var(--white);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.statValue {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--gray-900);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.statLabel {
+  font-size: 0.72rem;
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+/* Sections */
+.section {
+  background: var(--white);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 0.875rem;
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.125rem;
+}
+
+.rowLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.rowTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.rowSub {
+  font-size: 0.78rem;
+  color: var(--gray-500);
+}
+
+/* Toggle switch */
+.toggle {
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.toggleTrack {
+  display: block;
+  width: 48px;
+  height: 26px;
+  border-radius: 13px;
+  background: var(--gray-300);
+  position: relative;
+  transition: background 0.25s ease;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.toggleTrackOn {
+  background: #4cd964;
+}
+
+.toggleThumbOn,
+.toggleThumbOff {
+  position: absolute;
+  top: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  transition: left 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.toggleThumbOn {
+  left: 25px;
+}
+
+.toggleThumbOff {
+  left: 3px;
+}
+
+/* Change type button */
+.changeTypeBtn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 1.125rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  text-align: left;
+  gap: 0.75rem;
+}
+
+.changeTypeIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #FFECEC;
+  color: #FF0000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.changeTypeLabel {
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.changeTypeChevron {
+  color: var(--gray-400);
+  display: flex;
+  align-items: center;
+}
+
+/* Active donation status card */
+.donationStatusCard {
+  padding: 1rem 1.125rem 1.25rem;
+}
+
+.donationStatusTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.1rem;
+}
+
+.donationStatusInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.donationStatusTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.donationStatusSub {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  font-weight: 400;
+}
+
+.donationStatusLink {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #FF0000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+
+/* Progress stepper */
+.progressRow {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+}
+
+.progressStep {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.progressDot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--gray-300);
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  margin-bottom: 0.4rem;
+  transition: all 0.2s ease;
+}
+
+.progressDotDone {
+  background: #FF0000;
+  border-color: #FF0000;
+  color: var(--white);
+}
+
+.progressDotActive {
+  background: var(--white);
+  border-color: #FF0000;
+  border-width: 2.5px;
+  box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.12);
+  animation: dotPulseRing 1.6s ease-out infinite;
+}
+
+@keyframes dotPulseRing {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.45);
+  }
+  60% {
+    box-shadow: 0 0 0 8px rgba(255, 0, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+  }
+}
+
+.progressDotActive::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #FF0000;
+  animation: dotPulseCore 1.6s ease-in-out infinite;
+}
+
+@keyframes dotPulseCore {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.75); opacity: 0.7; }
+}
+
+.progressLabel {
+  font-size: 0.68rem;
+  color: var(--gray-400);
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.progressLabelActive {
+  color: #FF0000;
+  font-weight: 700;
+}
+
+.progressLine {
+  position: absolute;
+  top: 13px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--gray-200);
+  z-index: 0;
+}
+
+.progressLineDone {
+  background: #FF0000;
+}

@@ -1,0 +1,231 @@
+.page {
+  background: var(--white);
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 1.5rem;
+  position: relative;
+}
+
+.handle {
+  width: 40px;
+  height: 4px;
+  background: var(--gray-300);
+  border-radius: 2px;
+  margin: 0.875rem auto 0;
+  flex-shrink: 0;
+}
+
+.sheetHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem 0.5rem;
+  flex-shrink: 0;
+}
+
+.backBtn {
+  font-size: 1.4rem;
+  background: none;
+  border: none;
+  color: var(--gray-900);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--gray-900);
+  letter-spacing: -0.02em;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0.75rem 1.25rem 0;
+  flex: 1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.1rem;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 0.45rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 10px;
+  font-size: 15px;
+  background: var(--white);
+  color: var(--gray-900);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.input:focus {
+  border-color: var(--gray-400);
+}
+
+.input::placeholder {
+  color: var(--gray-400);
+}
+
+.hospitalRow {
+  position: relative;
+  cursor: pointer;
+}
+
+.hospitalRow .input {
+  padding-right: 2.75rem;
+  cursor: pointer;
+}
+
+.dropdownIcon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.65rem;
+  color: var(--gray-500);
+  pointer-events: none;
+}
+
+.bloodGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.pill,
+.pillActive {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 0.5rem;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: all 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pill:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.pillActive {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--white);
+}
+
+.radioHidden {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.textareaWrap {
+  position: relative;
+}
+
+.textarea {
+  width: 100%;
+  padding: 0.8rem 1rem 1.75rem;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: inherit;
+  resize: none;
+  min-height: 90px;
+  outline: none;
+  color: var(--gray-900);
+  transition: border-color 0.15s;
+}
+
+.textarea:focus {
+  border-color: var(--gray-400);
+}
+
+.textarea::placeholder {
+  color: var(--gray-400);
+}
+
+.charCount {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--gray-400);
+  pointer-events: none;
+}
+
+.errors {
+  padding: 0.75rem 1rem;
+  background: rgba(229, 57, 53, 0.08);
+  color: var(--red);
+  border-radius: 10px;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.hospitalSheet {
+  position: absolute;
+  inset: 0;
+  background: var(--white);
+  z-index: 10;
+  border-radius: 20px 20px 0 0;
+  overflow-y: auto;
+  animation: slideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.submit {
+  display: block;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: var(--red);
+  color: var(--white);
+  border: none;
+  border-radius: 999px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s;
+  letter-spacing: -0.01em;
+  margin-top: 1rem;
+}
+
+.submit:hover:not(:disabled) {
+  background: var(--red-dark);
+}
+
+.submit:disabled {
+  background: var(--gray-400);
+  color: var(--gray-600);
+  cursor: not-allowed;
+}

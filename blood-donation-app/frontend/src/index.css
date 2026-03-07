@@ -1,0 +1,118 @@
+:root {
+  --red: #e53935;
+  --red-dark: #b71c1c;
+  --red-header: #c62828;
+  --red-btn: #b71c1c;
+  --red-light: rgba(229, 57, 53, 0.08);
+  --toggle-green: #43a047;
+  --gray-50: #fafafa;
+  --gray-100: #f5f5f5;
+  --gray-200: #eeeeee;
+  --gray-300: #e0e0e0;
+  --gray-400: #bdbdbd;
+  --gray-500: #9e9e9e;
+  --gray-600: #757575;
+  --gray-700: #616161;
+  --gray-800: #424242;
+  --gray-900: #212121;
+  --green: #2e7d32;
+  --green-light: #e8f5e9;
+  --white: #ffffff;
+  --orange: #e07c3c;
+  --orange-light: #fef3eb;
+  --icon-bg: #ede5f4;
+  --icon-color: #7b6b94;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-pill: 999px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--gray-100);
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  overflow-x: hidden;
+  color: var(--gray-900);
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-width: 428px;
+  margin: 0 auto;
+  background: var(--gray-50);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+@media (min-width: 429px) {
+  body {
+    background: var(--gray-300);
+  }
+  #root {
+    min-height: 100vh;
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+button,
+a[role="button"],
+input[type="submit"],
+input[type="button"] {
+  min-height: 44px;
+}
+
+input, select, textarea {
+  font-size: 16px;
+}
+
+/* Shared card */
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+/* Primary button */
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  background: var(--red);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease;
+}
+
+.btnPrimary:hover:not(:disabled) {
+  background: var(--red-dark);
+}
+
+.btnPrimary:disabled {
+  background: var(--gray-400);
+  cursor: not-allowed;
+  color: var(--gray-600);
+}

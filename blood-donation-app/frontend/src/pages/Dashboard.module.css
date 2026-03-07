@@ -1,0 +1,303 @@
+.dashboard {
+  padding: 0;
+  background: var(--white);
+}
+
+.section {
+  background: var(--white);
+  padding: 0 0 1.5rem;
+}
+
+.sectionHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.875rem;
+  padding: 0.875rem 1rem 0.75rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.sectionTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--gray-900);
+  letter-spacing: -0.01em;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.legendDotCompat {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  flex-shrink: 0;
+}
+
+.legendLabel {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--gray-500);
+}
+
+.sortWrapper {
+  position: relative;
+}
+
+.sortTab,
+.sortTabActive {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  border: 1.5px solid var(--gray-300);
+  background: transparent;
+  color: var(--gray-600);
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  white-space: nowrap;
+}
+
+.sortTab:hover {
+  border-color: var(--gray-400);
+  color: var(--gray-800);
+}
+
+.sortTabActive {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--white);
+}
+
+.sortChevron {
+  font-size: 0.65rem;
+  line-height: 1;
+}
+
+.sortBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+}
+
+.sortDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  min-width: 120px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.sortOption {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--gray-700);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.1s;
+}
+
+.sortOption:hover {
+  background: var(--gray-50);
+}
+
+.sortOptionActive {
+  color: var(--red);
+  font-weight: 600;
+}
+
+.resetRow {
+  padding: 1.25rem 1rem 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.resetBtn {
+  background: none;
+  border: none;
+  color: var(--gray-400);
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s;
+}
+
+.resetBtn:hover:not(:disabled) {
+  color: var(--gray-600);
+}
+
+.resetBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.empty {
+  color: var(--gray-600);
+  margin: 0;
+  padding: 1.25rem 0.125rem;
+  font-size: 0.95rem;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.card {
+  border: 1px solid var(--gray-200);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--white);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.cardCompat {
+  border-color: #86efac;
+  background: #f0fdf4;
+  box-shadow: 0 1px 4px rgba(34, 197, 94, 0.12);
+}
+
+.cardCompat .cardLink:hover,
+.cardCompat .cardLink:active {
+  background: #dcfce7;
+}
+
+.cardLink {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem 0.75rem 0.875rem;
+  text-decoration: none;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s ease;
+}
+
+.cardLink:hover,
+.cardLink:active {
+  background: var(--gray-50);
+}
+
+/* Blood type circle: light red bg, red ring, red text with superscript sign */
+.cardBloodType {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid #FF0000;
+  background: #FFECEC;
+  color: #FF0000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-right: 0.875rem;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.cardBloodType sup {
+  font-size: 0.6em;
+  vertical-align: super;
+  line-height: 0;
+  font-weight: 800;
+}
+
+.cardBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cardName {
+  font-weight: 700;
+  color: var(--gray-900);
+  font-size: 1rem;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--gray-500);
+}
+
+.cardHospital {
+  color: var(--gray-500);
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180px;
+}
+
+.cardSeparator {
+  display: inline-block;
+  width: 1px;
+  height: 0.8em;
+  background: var(--gray-300);
+  flex-shrink: 0;
+}
+
+.cardDistance {
+  color: var(--gray-500);
+  font-weight: 400;
+}
+
+.cardAction {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-400);
+  margin-left: 0.25rem;
+}
+
+.cardAction svg {
+  width: 18px;
+  height: 18px;
+}

@@ -1,0 +1,142 @@
+.page {
+  padding: 1.25rem 1rem 2rem;
+  background: var(--white);
+  min-height: 100%;
+}
+
+.headerRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--gray-900);
+  letter-spacing: -0.02em;
+}
+
+.periodLabel {
+  font-size: 0.9rem;
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+/* Period toggle */
+.toggle {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1.5rem;
+  background: var(--gray-100);
+  padding: 0.2rem;
+  border-radius: 999px;
+}
+
+.toggleBtn,
+.toggleActive {
+  flex: 1;
+  padding: 0.45rem 1rem;
+  border: none;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  color: var(--gray-500);
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.15s ease;
+}
+
+.toggleBtn:hover {
+  color: var(--gray-800);
+}
+
+.toggleActive {
+  background: var(--white);
+  color: var(--red);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* List */
+.loading,
+.empty {
+  color: var(--gray-500);
+  margin: 0;
+  padding: 1rem 0;
+  font-size: 0.95rem;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0.25rem;
+  border-bottom: 1px solid var(--gray-100);
+  gap: 0.875rem;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+/* Medal / rank */
+.medal {
+  width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.trophyWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rankNum {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--gray-400);
+}
+
+/* Name */
+.name {
+  flex: 1;
+  font-weight: 600;
+  color: var(--gray-900);
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+
+/* Trends */
+.trendUp {
+  color: #2e7d32;
+  flex-shrink: 0;
+}
+
+.trendDown {
+  color: var(--red);
+  flex-shrink: 0;
+}
+
+.trendNeutral {
+  font-size: 1rem;
+  color: var(--gray-400);
+  flex-shrink: 0;
+  width: 18px;
+  text-align: center;
+}
