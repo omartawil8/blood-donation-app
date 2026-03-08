@@ -52,6 +52,7 @@ export default function Profile() {
   const nameInputRef = useRef<HTMLInputElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
   const profilePicWrapRef = useRef<HTMLButtonElement>(null);
+  const profilePicAreaRef = useRef<HTMLDivElement>(null);
   const cancelledRef = useRef(false);
 
   const handleReset = async () => {
@@ -161,8 +162,8 @@ export default function Profile() {
   useEffect(() => {
     if (!showCameraOverlay) return;
     const onDocClick = (e: MouseEvent) => {
-      const wrap = profilePicWrapRef.current;
-      if (wrap && !wrap.contains(e.target as Node)) setShowCameraOverlay(false);
+      const area = profilePicAreaRef.current;
+      if (area && !area.contains(e.target as Node)) setShowCameraOverlay(false);
     };
     document.addEventListener('click', onDocClick, true);
     return () => document.removeEventListener('click', onDocClick, true);
@@ -206,38 +207,61 @@ export default function Profile() {
         <>
           {/* Profile hero: photo (left) | name + points (center) | blood type (right) */}
           <div className={styles.hero}>
-            <input
-              ref={photoInputRef}
-              type="file"
-              accept="image/*"
-              className={styles.photoInput}
-              onChange={handlePhotoChange}
-              aria-label="Change profile photo"
-            />
-            <button
-              ref={profilePicWrapRef}
-              type="button"
-              className={`${styles.profilePicWrap} ${showCameraOverlay ? styles.profilePicWrapOverlayVisible : ''}`}
-              onClick={handleProfilePicClick}
-              aria-label="Add or change profile photo"
-            >
-              {profilePhotoUrl ? (
-                <img src={profilePhotoUrl} alt="" className={styles.profilePicImg} />
-              ) : (
-                <span className={styles.profilePicPlaceholder} aria-hidden>
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="8" r="4"/>
-                    <path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
+            <div ref={profilePicAreaRef} className={styles.profilePicArea}>
+              <input
+                ref={photoInputRef}
+                type="file"
+                accept="image/*"
+                className={styles.photoInput}
+                onChange={handlePhotoChange}
+                aria-label="Change profile photo"
+              />
+              <button
+                ref={profilePicWrapRef}
+                type="button"
+                className={`${styles.profilePicWrap} ${showCameraOverlay ? styles.profilePicWrapOverlayVisible : ''}`}
+                onClick={handleProfilePicClick}
+                aria-label="Add or change profile photo"
+              >
+                {profilePhotoUrl ? (
+                  <img src={profilePhotoUrl} alt="" className={styles.profilePicImg} />
+                ) : (
+                  <span className={styles.profilePicPlaceholder} aria-hidden>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="8" r="4"/>
+                      <path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
+                    </svg>
+                  </span>
+                )}
+                <span className={styles.profilePicAdd} aria-hidden>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
                   </svg>
                 </span>
+              </button>
+              {showCameraOverlay && profilePhotoUrl && (
+                <div className={styles.profilePicMenu}>
+                  <button
+                    type="button"
+                    className={styles.profilePicMenuBtn}
+                    onClick={() => {
+                      setShowCameraOverlay(false);
+                      photoInputRef.current?.click();
+                    }}
+                  >
+                    Change photo
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.profilePicMenuBtn}
+                    onClick={() => clearPhoto()}
+                  >
+                    Remove photo
+                  </button>
+                </div>
               )}
-              <span className={styles.profilePicAdd} aria-hidden>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                  <circle cx="12" cy="13" r="4"/>
-                </svg>
-              </span>
-            </button>
+            </div>
             <div className={styles.heroInfo}>
               {editingName ? (
                 <div className={styles.nameEditRow}>

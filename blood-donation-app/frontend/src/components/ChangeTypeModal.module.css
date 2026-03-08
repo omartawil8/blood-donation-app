@@ -31,7 +31,7 @@
   max-height: 80dvh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 0 1.25rem calc(max(1.75rem, env(safe-area-inset-bottom)) + 60px);
+  padding: 0 1.25rem calc(max(1.25rem, env(safe-area-inset-bottom)) + 1rem);
   animation: slideUp 0.32s cubic-bezier(0.32, 0.72, 0, 1);
 }
 

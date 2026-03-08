@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { users } from '../api/client';
@@ -81,6 +81,8 @@ export default function Login() {
   const [bloodType, setBloodType] = useState<string>(BLOOD_TYPES[0]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const nameRowRef = useRef<HTMLDivElement>(null);
 
   // Gradient and scroll lock: body-level so phone bottom is never white; extend into safe area
   const gradient = 'linear-gradient(170deg, #FF0000 0%, #990000 100%)';
@@ -248,11 +250,39 @@ export default function Login() {
               <h2 className={styles.cardTitle}>{copy.cardTitle}</h2>
               <p className={styles.cardSubtitle}>{copy.cardSubtitle}</p>
             </div>
-            <form onSubmit={handleSubmit} className={styles.form}>
+            <form
+              onSubmit={handleSubmit}
+              className={styles.form}
+              onTouchStartCapture={(e) => {
+                const row = nameRowRef.current;
+                const t = e.touches[0];
+                if (!row || !t) return;
+                const rect = row.getBoundingClientRect();
+                if (t.clientX >= rect.left && t.clientX <= rect.right && t.clientY >= rect.top && t.clientY <= rect.bottom) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  nameInputRef.current?.focus();
+                }
+              }}
+              onPointerDownCapture={(e) => {
+                const row = nameRowRef.current;
+                if (!row || e.clientX == null) return;
+                const rect = row.getBoundingClientRect();
+                if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  nameInputRef.current?.focus();
+                }
+              }}
+            >
               <div className={styles.inputGroup}>
-                <div className={`${styles.inputRow} ${styles.inputRowFirst}`}>
+                <div
+                  ref={nameRowRef}
+                  className={`${styles.inputRow} ${styles.inputRowFirst}`}
+                >
                   <label htmlFor="name" className={styles.inputLabel}>{copy.nameLabel}</label>
                   <input
+                    ref={nameInputRef}
                     id="name"
                     type="text"
                     value={username}

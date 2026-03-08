@@ -1,7 +1,14 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-// Depth ordering for routes — higher = deeper in the hierarchy
+// Tab bar order (left to right) — used so Profile → Top Donors slides left, Top Donors → Profile slides right
+const TAB_ORDER: Record<string, number> = {
+  '/': 0,
+  '/top-donors': 1,
+  '/profile': 2,
+};
+
+// Depth for non-tab routes — higher = deeper in the hierarchy
 const ROUTE_DEPTH: Record<string, number> = {
   '/': 0,
   '/top-donors': 1,
@@ -30,9 +37,15 @@ export function NavDirectionProvider({ children }: { children: React.ReactNode }
     const prev = prevPath.current;
     const next = location.pathname;
     if (prev === next) return;
-    const prevDepth = getDepth(prev);
-    const nextDepth = getDepth(next);
-    setDirection(nextDepth >= prevDepth ? 'forward' : 'back');
+    const prevTab = TAB_ORDER[prev];
+    const nextTab = TAB_ORDER[next];
+    if (prevTab !== undefined && nextTab !== undefined) {
+      setDirection(nextTab > prevTab ? 'forward' : 'back');
+    } else {
+      const prevDepth = getDepth(prev);
+      const nextDepth = getDepth(next);
+      setDirection(nextDepth >= prevDepth ? 'forward' : 'back');
+    }
     prevPath.current = next;
   }, [location.pathname]);
 

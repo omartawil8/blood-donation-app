@@ -278,6 +278,14 @@ export default function RequestDetail() {
             >
               I donated
             </button>
+            <button
+              type="button"
+              className={styles.linkCancel}
+              onClick={() => handleStatus('cancelled')}
+              disabled={actionLoading}
+            >
+              Transportation issue
+            </button>
           </>
         )}
 
