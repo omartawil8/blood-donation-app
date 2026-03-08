@@ -21,7 +21,6 @@
   width: 100%;
   max-width: 340px;
   padding: 1.25rem 1.5rem;
-  box-shadow: var(--shadow-lg);
   animation: scaleIn 0.2s ease;
 }
 

@@ -1,60 +1,188 @@
 .layout {
-  height: 100vh;
-  height: 100dvh;
+  height: 100%;
+  min-height: 0;
+  max-height: 100dvh;
   background: var(--white);
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
+/* ── Page slide transitions ── */
+.pageSlide {
+  width: 100%;
+  height: 100%;
+  will-change: transform, opacity;
+}
+
+@keyframes slideInFromRight {
+  from { transform: translateX(40px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes slideInFromLeft {
+  from { transform: translateX(-40px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+
+.slideInRight {
+  animation: slideInFromRight 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.slideInLeft {
+  animation: slideInFromLeft 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
 .header {
   background: linear-gradient(to right, #FF0000, #990000);
   color: var(--white);
   flex-shrink: 0;
-  padding-top: max(0.75rem, env(safe-area-inset-top));
-  padding-left: 1.125rem;
-  padding-right: 1.125rem;
-  padding-bottom: 1.25rem;
+  padding-top: max(0.5rem, env(safe-area-inset-top));
+  padding-left: 0.875rem;
+  padding-right: 0.875rem;
+  padding-bottom: 0.65rem;
+}
+
+.headerMinimal {
+  padding-top: max(0.5rem, env(safe-area-inset-top));
+  padding-bottom: 0.5rem;
+}
+
+/* Donate (Active Requests) header — white + heat map with more of the brand red */
+.headerDonate {
+  position: relative;
+  background: var(--white);
+  color: #1a1a1a;
+}
+
+.headerDonate > .headerTop,
+.headerDonate > .statsRow {
+  position: relative;
+  z-index: 1;
+}
+
+.headerDonate::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(135deg, rgba(255, 0, 0, 0.1) 0%, rgba(153, 0, 0, 0.06) 40%, rgba(153, 0, 0, 0.02) 70%, transparent 100%),
+    linear-gradient(280deg, rgba(255, 0, 0, 0.08) 0%, rgba(153, 0, 0, 0.04) 50%, transparent 100%),
+    radial-gradient(ellipse 90% 80% at 12% 28%, rgba(255, 0, 0, 0.38) 0%, rgba(220, 0, 0, 0.18) 35%, rgba(200, 0, 0, 0.06) 55%, transparent 78%),
+    radial-gradient(ellipse 85% 75% at 88% 22%, rgba(255, 0, 0, 0.36) 0%, rgba(200, 0, 0, 0.16) 35%, rgba(180, 0, 0, 0.05) 55%, transparent 78%),
+    radial-gradient(ellipse 80% 85% at 85% 82%, rgba(255, 0, 0, 0.34) 0%, rgba(200, 0, 0, 0.14) 35%, transparent 75%),
+    radial-gradient(ellipse 85% 80% at 15% 85%, rgba(255, 40, 50, 0.26) 0%, rgba(200, 20, 30, 0.12) 38%, transparent 72%),
+    radial-gradient(ellipse 95% 95% at 50% 50%, rgba(255, 60, 50, 0.22) 0%, rgba(220, 40, 40, 0.1) 40%, rgba(200, 30, 30, 0.03) 60%, transparent 82%),
+    radial-gradient(ellipse 90% 80% at 78% 18%, rgba(255, 50, 40, 0.22) 0%, rgba(220, 35, 30, 0.08) 40%, transparent 72%),
+    radial-gradient(ellipse 85% 75% at 22% 75%, rgba(255, 0, 0, 0.28) 0%, rgba(220, 0, 0, 0.12) 38%, transparent 72%),
+    radial-gradient(ellipse 80% 85% at 82% 62%, rgba(255, 0, 0, 0.26) 0%, rgba(210, 0, 0, 0.1) 40%, transparent 75%),
+    radial-gradient(ellipse 90% 85% at 28% 18%, rgba(255, 30, 40, 0.2) 0%, rgba(200, 20, 30, 0.08) 42%, transparent 78%),
+    radial-gradient(ellipse 85% 80% at 72% 78%, rgba(255, 0, 0, 0.22) 0%, rgba(220, 0, 0, 0.08) 40%, transparent 72%),
+    radial-gradient(ellipse 75% 90% at 5% 50%, rgba(255, 0, 0, 0.24) 0%, rgba(220, 0, 0, 0.1) 42%, transparent 75%),
+    radial-gradient(ellipse 80% 85% at 95% 54%, rgba(255, 50, 40, 0.18) 0%, rgba(220, 35, 30, 0.06) 45%, transparent 78%),
+    radial-gradient(ellipse 90% 75% at 50% 8%, rgba(255, 20, 30, 0.2) 0%, rgba(200, 10, 20, 0.06) 45%, transparent 78%),
+    radial-gradient(ellipse 85% 80% at 52% 92%, rgba(255, 0, 0, 0.18) 0%, rgba(200, 0, 0, 0.05) 45%, transparent 78%),
+    radial-gradient(ellipse 90% 85% at 25% 42%, rgba(255, 0, 0, 0.18) 0%, rgba(210, 0, 0, 0.06) 45%, transparent 75%),
+    radial-gradient(ellipse 85% 90% at 78% 38%, rgba(255, 60, 40, 0.18) 0%, rgba(220, 40, 30, 0.06) 45%, transparent 78%),
+    radial-gradient(ellipse 85% 80% at 35% 72%, rgba(255, 0, 0, 0.16) 0%, rgba(200, 0, 0, 0.05) 45%, transparent 75%),
+    radial-gradient(ellipse 90% 90% at 68% 68%, rgba(255, 40, 50, 0.14) 0%, rgba(220, 25, 35, 0.04) 50%, transparent 80%);
+  background-size: 100% 100%;
+  mask-image: radial-gradient(ellipse 120% 120% at 50% 50%, black 15%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 120% 120% at 50% 50%, black 15%, transparent 70%);
+  animation: headerHeatMapPulse 12s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes headerHeatMapPulse {
+  0%, 100% { opacity: 0.88; }
+  50% { opacity: 1; }
+}
+
+.headerDonate .backBtn {
+  color: #1a1a1a;
+}
+
+.headerDonate .backBtn:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.headerDonate .backBtn:active {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.headerDonate .statLabel {
+  color: var(--gray-600);
+}
+
+.headerDonate .statValue,
+.headerDonate .statValueDays {
+  color: #1a1a1a;
+}
+
+.headerDonate .donorCircles .circle1,
+.headerDonate .donorCircles .circle2,
+.headerDonate .donorCircles .circle3,
+.headerDonate .donorCircles .circle4 {
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.headerDonate .infoBtn {
+  color: var(--gray-600);
+}
+
+.headerDonate .infoBtn:hover {
+  color: #1a1a1a;
+}
+
+.headerTopMinimal {
+  height: 0.25rem;
+  min-height: 0;
 }
 
 .headerTop {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
 }
 
 .headerSpacer {
-  width: 44px;
+  width: 36px;
   flex-shrink: 0;
 }
 
 .backBtn {
-  width: 36px;
-  height: 36px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
   background: transparent;
   color: var(--white);
-  font-size: 1.5rem;
-  line-height: 1;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 50%;
   -webkit-tap-highlight-color: transparent;
   flex-shrink: 0;
   padding: 0;
+  min-height: 0;
+  transition: background 0.18s ease, transform 0.15s ease;
 }
 
 .backBtn:hover {
   background: rgba(255, 255, 255, 0.15);
 }
 
+.backBtn:active {
+  transform: scale(0.88);
+  background: rgba(255, 255, 255, 0.22);
+}
+
 .title {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   font-weight: 700;
   letter-spacing: -0.01em;
   flex: 1;
@@ -97,7 +225,6 @@
   background: rgba(255, 255, 255, 0.3);
   position: relative;
   transition: background 0.25s ease;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.15);
 }
 
 .toggleTrackOn {
@@ -116,7 +243,6 @@
   height: 20px;
   border-radius: 50%;
   background: var(--white);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   transition: left 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -133,21 +259,21 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.5rem;
   transition: all 0.3s ease;
 }
 
 .stat {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.5rem;
 }
 
 .statRight {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.65rem;
+  gap: 0.5rem;
 }
 
 .statFadeIn {
@@ -162,8 +288,8 @@
 /* Overlapping donor avatar circles */
 .donorCircles {
   position: relative;
-  width: 68px;
-  height: 30px;
+  width: 52px;
+  height: 24px;
   flex-shrink: 0;
 }
 
@@ -172,40 +298,40 @@
 .circle3,
 .circle4 {
   position: absolute;
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  border: 2.5px solid rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.9);
   top: 0;
 }
 
 .circle1 { left: 0;    z-index: 1; background: #f9c4c4; }
-.circle2 { left: 13px; z-index: 2; background: #c4dff9; }
-.circle3 { left: 26px; z-index: 3; background: #c4f9d4; }
-.circle4 { left: 39px; z-index: 4; background: #f9ecc4; }
+.circle2 { left: 10px; z-index: 2; background: #c4dff9; }
+.circle3 { left: 20px; z-index: 3; background: #c4f9d4; }
+.circle4 { left: 30px; z-index: 4; background: #f9ecc4; }
 
 .statBlock {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.15rem;
 }
 
 .statLabel {
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   opacity: 0.9;
   font-weight: 400;
   line-height: 1.2;
 }
 
 .statValue {
-  font-size: 1.55rem;
+  font-size: 1.25rem;
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.1;
 }
 
 .statValueDays {
-  font-size: 1.35rem;
+  font-size: 1.1rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -288,19 +414,46 @@
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
-  box-shadow: 0 -4px 24px rgba(0,0,0,0.15);
 }
 
 .sheetOpen {
   transform: translateX(-50%) translateY(0);
+  height: 88dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.sheetOpen > * {
+  flex: 1;
+  min-height: 0;
 }
 
 .main {
   flex: 1;
   padding: 0;
   padding-bottom: calc(60px + env(safe-area-inset-bottom));
+  overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
   background: var(--white);
   min-height: 0;
+  animation: pageFadeIn 0.2s ease-out;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.mainNoHeader {
+  background: var(--gray-50);
+  padding-top: 0;
 }

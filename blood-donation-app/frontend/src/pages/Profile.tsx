@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { users, donations } from '../api/client';
+import { users, donations, dev } from '../api/client';
 import ChangeTypeModal from '../components/ChangeTypeModal';
+import CompatibilityGuideModal from '../components/CompatibilityGuideModal';
 import styles from './Profile.module.css';
 
 type Me = {
@@ -38,12 +39,42 @@ export default function Profile() {
   const [activeDonation, setActiveDonation] = useState<ActiveDonation | null>(null);
   const [loading, setLoading] = useState(true);
   const [showChangeType, setShowChangeType] = useState(false);
+  const [showCompatibilityGuide, setShowCompatibilityGuide] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState('');
   const [nameSaving, setNameSaving] = useState(false);
   const [nameError, setNameError] = useState('');
+  const [resetting, setResetting] = useState(false);
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(() =>
+    typeof localStorage !== 'undefined' ? localStorage.getItem('bloodDonorProfilePhoto') : null
+  );
+  const [showCameraOverlay, setShowCameraOverlay] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const profilePicWrapRef = useRef<HTMLButtonElement>(null);
   const cancelledRef = useRef(false);
+
+  const handleReset = async () => {
+    setResetting(true);
+    try {
+      await dev.reset();
+      localStorage.removeItem('bloodDonorUserId');
+      window.location.href = '/login';
+    } catch {
+      setResetting(false);
+    }
+  };
+
+  useEffect(() => {
+    const stored = localStorage.getItem('bloodDonorProfilePhoto');
+    if (stored && stored.startsWith('data:')) setProfilePhotoUrl(stored);
+  }, []);
+
+  const fetchMe = () => {
+    users.me()
+      .then((meRes) => setMe(meRes))
+      .catch(() => setMe(null));
+  };
 
   useEffect(() => {
     cancelledRef.current = false;
@@ -72,6 +103,12 @@ export default function Profile() {
     return () => { cancelledRef.current = true; };
   }, [showChangeType]);
 
+  useEffect(() => {
+    const onRequestCreated = () => fetchMe();
+    window.addEventListener('blood-request-created', onRequestCreated);
+    return () => window.removeEventListener('blood-request-created', onRequestCreated);
+  }, []);
+
   const handleToggleOptOut = async () => {
     if (!me) return;
     try {
@@ -93,6 +130,48 @@ export default function Profile() {
   const cancelEditName = () => {
     setEditingName(false);
     setNameError('');
+  };
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    setShowCameraOverlay(false);
+    const url = URL.createObjectURL(file);
+    setProfilePhotoUrl(url);
+    try {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result as string;
+        try { localStorage.setItem('bloodDonorProfilePhoto', dataUrl); } catch { /* quota */ }
+      };
+      reader.readAsDataURL(file);
+    } catch { /* ignore */ }
+    e.target.value = '';
+  };
+
+  const handleProfilePicClick = () => {
+    if (showCameraOverlay) {
+      setShowCameraOverlay(false);
+      photoInputRef.current?.click();
+    } else {
+      setShowCameraOverlay(true);
+    }
+  };
+
+  useEffect(() => {
+    if (!showCameraOverlay) return;
+    const onDocClick = (e: MouseEvent) => {
+      const wrap = profilePicWrapRef.current;
+      if (wrap && !wrap.contains(e.target as Node)) setShowCameraOverlay(false);
+    };
+    document.addEventListener('click', onDocClick, true);
+    return () => document.removeEventListener('click', onDocClick, true);
+  }, [showCameraOverlay]);
+
+  const clearPhoto = () => {
+    setShowCameraOverlay(false);
+    setProfilePhotoUrl(null);
+    try { localStorage.removeItem('bloodDonorProfilePhoto'); } catch { /* ignore */ }
   };
 
   const saveName = async () => {
@@ -118,18 +197,47 @@ export default function Profile() {
 
   return (
     <div className={styles.page}>
+      <div className={styles.stickyHeader}>
+        <h2 className={styles.pageTitle}>Profile</h2>
+      </div>
       {loading ? (
         <p className={styles.loadingText}>Loading…</p>
       ) : (
         <>
-          {/* Blood type hero */}
+          {/* Profile hero: photo (left) | name + points (center) | blood type (right) */}
           <div className={styles.hero}>
-            <div
-              className={styles.bloodBadge}
-              style={{ fontSize: isTwoLetter ? '1.6rem' : '2.1rem' }}
+            <input
+              ref={photoInputRef}
+              type="file"
+              accept="image/*"
+              className={styles.photoInput}
+              onChange={handlePhotoChange}
+              aria-label="Change profile photo"
+            />
+            <button
+              ref={profilePicWrapRef}
+              type="button"
+              className={`${styles.profilePicWrap} ${showCameraOverlay ? styles.profilePicWrapOverlayVisible : ''}`}
+              onClick={handleProfilePicClick}
+              aria-label="Add or change profile photo"
             >
-              {bloodLetter}<sup>{bloodSign}</sup>
-            </div>
+              {profilePhotoUrl ? (
+                <img src={profilePhotoUrl} alt="" className={styles.profilePicImg} />
+              ) : (
+                <span className={styles.profilePicPlaceholder} aria-hidden>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="8" r="4"/>
+                    <path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
+                  </svg>
+                </span>
+              )}
+              <span className={styles.profilePicAdd} aria-hidden>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                  <circle cx="12" cy="13" r="4"/>
+                </svg>
+              </span>
+            </button>
             <div className={styles.heroInfo}>
               {editingName ? (
                 <div className={styles.nameEditRow}>
@@ -165,6 +273,16 @@ export default function Profile() {
                 {me?.points != null ? `${me.points.toLocaleString()} pts` : '—'}
               </p>
             </div>
+            <button
+              type="button"
+              className={styles.bloodTypeSmall}
+              style={{ fontSize: isTwoLetter ? '0.85rem' : '1rem' }}
+              onClick={() => setShowChangeType(true)}
+              aria-label="Change blood type"
+              title="Tap to change blood type"
+            >
+              {bloodLetter}<sup>{bloodSign}</sup>
+            </button>
           </div>
 
           {/* Stats cards */}
@@ -177,11 +295,11 @@ export default function Profile() {
             </div>
             <div className={styles.statCard}>
               <span className={styles.statValue}>
-                {me?.daysUntilCanDonate != null && me.daysUntilCanDonate > 0
-                  ? `${me.daysUntilCanDonate}d`
-                  : me && !me.optOut ? 'Ready' : '—'}
+                {me?.lastDonationDate
+                  ? new Date(me.lastDonationDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+                  : '—'}
               </span>
-              <span className={styles.statLabel}>Next Donation</span>
+              <span className={styles.statLabel}>Last Donation</span>
             </div>
           </div>
 
@@ -208,19 +326,19 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* Change blood type */}
+          {/* Blood Compatibility Guide */}
           <div className={styles.section}>
             <button
               type="button"
               className={styles.changeTypeBtn}
-              onClick={() => setShowChangeType(true)}
+              onClick={() => setShowCompatibilityGuide(true)}
             >
               <span className={styles.changeTypeIcon}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 2C12 2 5 10.5 5 15a7 7 0 0 0 14 0c0-4.5-7-13-7-13z"/>
                 </svg>
               </span>
-              <span className={styles.changeTypeLabel}>Change Blood Type</span>
+              <span className={styles.changeTypeLabel}>Blood Compatibility Guide</span>
               <span className={styles.changeTypeChevron}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="m9 18 6-6-6-6" />
@@ -290,6 +408,18 @@ export default function Profile() {
               </div>
             </div>
           )}
+
+          {/* Reset demo data */}
+          <div className={styles.section}>
+            <button
+              type="button"
+              className={styles.resetBtn}
+              onClick={handleReset}
+              disabled={resetting}
+            >
+              {resetting ? 'Resetting…' : 'Reset app data'}
+            </button>
+          </div>
         </>
       )}
 
@@ -300,6 +430,9 @@ export default function Profile() {
           onClose={() => setShowChangeType(false)}
           onSaved={() => setMe((prev) => prev ? { ...prev } : null)}
         />
+      )}
+      {showCompatibilityGuide && (
+        <CompatibilityGuideModal onClose={() => setShowCompatibilityGuide(false)} />
       )}
     </div>
   );

@@ -22,7 +22,6 @@
   max-width: 320px;
   padding: 2rem 1.5rem;
   text-align: center;
-  box-shadow: var(--shadow-lg);
   animation: scaleIn 0.3s ease;
 }
 
@@ -38,7 +37,6 @@
 .drop {
   font-size: 3.5rem;
   display: inline-block;
-  filter: drop-shadow(0 2px 12px rgba(196, 30, 58, 0.35));
 }
 
 .ptsValue {

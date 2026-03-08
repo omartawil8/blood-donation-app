@@ -55,14 +55,16 @@ export const hospitals = {
 };
 
 export const requests = {
-  create: (body: { patientName: string; patientAge?: number; hospitalId: string; bloodTypeNeeded: string; patientUsername?: string; unitsNeeded?: number; notes?: string; requiredBy?: string }) =>
+  create: (body: { patientName?: string; patientAge?: number; hospitalId: string; bloodTypeNeeded: string; patientUsername?: string; unitsNeeded?: number; notes?: string; requiredBy?: string }) =>
     api<{ _id: string; patientName: string; patientAge?: number; hospitalId: { name: string; address: string }; bloodTypeNeeded: string; createdAt: string }>(`${BASE}/requests`, { method: 'POST', body: JSON.stringify(body) }),
+  myPast: () =>
+    api<{ requests: Array<{ _id: string; patientName: string; bloodTypeNeeded: string; hospitalName: string; status: string; createdAt: string; activeDonationStatus: string | null }> }>(`${BASE}/requests/my-past`),
   active: (lng: number, lat: number, opts?: { radiusKm?: number; bloodType?: string; sort?: string }) =>
     api<{ requests: Array<{
       _id: string; patientName: string; bloodTypeNeeded: string; hospitalId: { name: string; address: string }; distanceKm?: number; createdAt: string;
     }> }>(`${BASE}/requests/active`, { params: { lng, lat, ...opts } }),
   get: (id: string, lng?: number, lat?: number) =>
-    api<{ _id: string; patientName: string; patientAge?: number; bloodTypeNeeded: string; hospitalId: { name: string; address: string }; distanceKm?: number; createdAt: string; notes?: string }>(
+    api<{ _id: string; patientName: string; patientAge?: number; bloodTypeNeeded: string; hospitalId: { name: string; address: string }; distanceKm?: number; createdAt: string; notes?: string; activeDonationStatus: string | null }>(
       `${BASE}/requests/${id}`,
       { params: lng != null && lat != null ? { lng, lat } : {} }
     ),
@@ -89,4 +91,6 @@ export const donations = {
     api<{ _id: string; status: string } | null>(`${BASE}/donations/by-request/${requestId}`),
   myActive: () =>
     api<{ donations: Array<{ _id: string; status: string; requestId: string; patientName: string; bloodTypeNeeded: string; hospitalName: string; pledgedAt: string }> }>(`${BASE}/donations/my-active`),
+  myPast: () =>
+    api<{ donations: Array<{ _id: string; requestId: string; patientName: string; bloodTypeNeeded: string; hospitalName: string; donatedAt: string }> }>(`${BASE}/donations/my-past`),
 };

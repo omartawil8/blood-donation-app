@@ -324,14 +324,14 @@ app.post('/api/requests', (req, res) => {
   const userId = req.query.userId as string;
   const body = req.body || {};
   const { patientName, patientAge, hospitalId, bloodTypeNeeded, unitsNeeded, notes } = body;
-  if (!patientName || !hospitalId || !bloodTypeNeeded) return res.status(400).json({ error: 'Missing fields' });
+  if (!hospitalId || !bloodTypeNeeded) return res.status(400).json({ error: 'Missing fields' });
   const requestedBy = userId || users[0]?._id;
   if (bloodRequests.some(r => r.requestedByUserId === requestedBy && r.status === 'pending')) {
     return res.status(400).json({ errors: ['User already has pending request'] });
   }
   const now = new Date();
   const reqEnt: BloodRequest = {
-    _id: nextId(), patientName, patientAge: patientAge ? Number(patientAge) : undefined,
+    _id: nextId(), patientName: patientName?.trim() || 'Anonymous', patientAge: patientAge ? Number(patientAge) : undefined,
     hospitalId, bloodTypeNeeded, unitsNeeded, notes,
     status: 'pending', requestedByUserId: requestedBy, createdAt: now, updatedAt: now,
   };
@@ -366,11 +366,43 @@ app.get('/api/requests/active', (req, res) => {
   res.json({ requests: withDistance });
 });
 
+app.get('/api/requests/my-past', (req, res) => {
+  seed();
+  const userId = req.query.userId as string;
+  if (!userId) return res.status(400).json({ error: 'userId required' });
+  const list = bloodRequests
+    .filter(r => r.requestedByUserId === userId)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .map(r => {
+      const h = hospitals.find(x => x._id === r.hospitalId);
+      const activeDonation = r.status === 'pending'
+        ? donations
+            .filter(d => d.requestId === r._id && (d.status === 'pledged' || d.status === 'on_the_way'))
+            .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())[0]
+        : null;
+      return {
+        _id: r._id,
+        patientName: r.patientName ?? 'Anonymous',
+        bloodTypeNeeded: r.bloodTypeNeeded,
+        hospitalName: h?.name ?? '',
+        status: r.status,
+        createdAt: r.createdAt,
+        activeDonationStatus: activeDonation?.status ?? null,
+      };
+    });
+  res.json({ requests: list });
+});
+
 app.get('/api/requests/:id', (req, res) => {
   seed();
   const r = bloodRequests.find(x => x._id === req.params.id);
   if (!r) return res.status(404).json({ error: 'Request not found' });
   const h = hospitals.find(x => x._id === r.hospitalId);
+  const activeDonation = r.status === 'pending'
+    ? donations
+        .filter(d => d.requestId === r._id && (d.status === 'pledged' || d.status === 'on_the_way'))
+        .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())[0]
+    : null;
   const lng = req.query.lng != null ? parseFloat(String(req.query.lng)) : NaN;
   const lat = req.query.lat != null ? parseFloat(String(req.query.lat)) : NaN;
   let distanceKm: number | undefined;
@@ -379,6 +411,7 @@ app.get('/api/requests/:id', (req, res) => {
     ...r,
     hospitalId: h ? { name: h.name, address: h.address } : { name: '', address: '' },
     distanceKm,
+    activeDonationStatus: activeDonation?.status ?? null,
   });
 });
 
@@ -476,6 +509,28 @@ app.get('/api/donations/my-active', (req, res) => {
       };
     });
   res.json({ donations: active });
+});
+
+app.get('/api/donations/my-past', (req, res) => {
+  seed();
+  const userId = req.query.userId as string;
+  if (!userId) return res.status(400).json({ error: 'userId required' });
+  const past = donations
+    .filter(d => d.donorId === userId && d.status === 'donated')
+    .sort((a, b) => new Date(b.donatedAt!).getTime() - new Date(a.donatedAt!).getTime())
+    .map(d => {
+      const req2 = bloodRequests.find(r => r._id === d.requestId);
+      const h = req2 ? hospitals.find(h => h._id === req2.hospitalId) : null;
+      return {
+        _id: d._id,
+        requestId: d.requestId,
+        patientName: req2?.patientName ?? 'Unknown',
+        bloodTypeNeeded: req2?.bloodTypeNeeded ?? '',
+        hospitalName: h?.name ?? '',
+        donatedAt: d.donatedAt,
+      };
+    });
+  res.json({ donations: past });
 });
 
 seed();

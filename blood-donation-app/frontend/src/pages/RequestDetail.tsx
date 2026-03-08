@@ -25,6 +25,7 @@ export default function RequestDetail() {
     createdAt: string;
     notes?: string;
     requiredBy?: string;
+    activeDonationStatus?: string | null;
   } | null>(null);
   const [myBloodType, setMyBloodType] = useState<string>('');
   const [donation, setDonation] = useState<{ _id: string; status: DonationStatus } | null>(null);
@@ -134,15 +135,22 @@ export default function RequestDetail() {
     return (
       <div className={styles.loading}>
         <p>Could not load request.</p>
-        <button type="button" onClick={() => navigate('/')} style={{ marginTop: '1rem', color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.95rem', textDecoration: 'underline' }}>
+        <button type="button" onClick={() => navigate(-1)} style={{ marginTop: '1rem', color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.95rem', textDecoration: 'underline' }}>
           Go back
         </button>
       </div>
     );
   }
 
+  const donorStatusLabel = request.activeDonationStatus === 'on_the_way' ? 'Donor is on the way' : request.activeDonationStatus === 'pledged' ? 'A donor has pledged' : null;
+
   return (
     <div className={styles.page}>
+      {donorStatusLabel && !donation && (
+        <div className={styles.donorStatusBanner}>
+          <span className={styles.donorStatusBannerText}>{donorStatusLabel}</span>
+        </div>
+      )}
       <section className={styles.recipientCard}>
         <div className={styles.bloodTypeCircle}>{request.bloodTypeNeeded}</div>
         <div className={styles.recipientInfo}>

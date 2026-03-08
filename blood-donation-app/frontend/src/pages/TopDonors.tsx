@@ -57,6 +57,7 @@ function TrendArrow({ rank }: { rank: number }) {
 export default function TopDonors() {
   const [period, setPeriod] = useState<'year' | 'all'>('year');
   const [leaderboard, setLeaderboard] = useState<Entry[]>([]);
+  const [me, setMe] = useState<{ username: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -64,8 +65,14 @@ export default function TopDonors() {
     (async () => {
       setLoading(true);
       try {
-        const res = await users.leaderboard(period === 'year' ? 'year' : undefined);
-        if (!cancelled) setLeaderboard(res.leaderboard);
+        const [lbRes, meRes] = await Promise.all([
+          users.leaderboard(period === 'year' ? 'year' : undefined),
+          users.me().catch(() => null),
+        ]);
+        if (!cancelled) {
+          setLeaderboard(lbRes.leaderboard);
+          setMe(meRes ? { username: meRes.username } : null);
+        }
       } catch {
         if (!cancelled) setLeaderboard([]);
       } finally {
@@ -75,47 +82,87 @@ export default function TopDonors() {
     return () => { cancelled = true; };
   }, [period]);
 
+  const top10Raw = leaderboard.slice(0, 10);
+  const placeholderNames: string[] = ['Layla H.', 'Omar K.', 'Nadia M.', 'Youssef A.', 'Rania S.', 'Karim T.', 'Sara F.', 'Adam D.', 'Lina N.', 'Jad C.'];
+  const top10: (Entry & { placeholder?: boolean })[] = [];
+  for (let i = 0; i < 10; i++) {
+    top10.push(
+      top10Raw[i] ?? {
+        rank: i + 1,
+        username: placeholderNames[i] ?? '—',
+        donations: 0,
+        points: 0,
+        placeholder: true,
+      }
+    );
+  }
+  const myEntry = leaderboard.find((e) => e.username === me?.username);
+  const showYouAtBottom = me && (!myEntry || myEntry.rank > 10);
+
   return (
     <div className={styles.page}>
-      <div className={styles.headerRow}>
-        <h2 className={styles.title}>Top Donors</h2>
-        <span className={styles.periodLabel}>{period === 'year' ? 'This Year' : 'All Time'}</span>
-      </div>
+      <div className={styles.stickyHeader}>
+        <div className={styles.headerRow}>
+          <h2 className={styles.title}>Top Donors</h2>
+          <span className={styles.periodLabel}>{period === 'year' ? 'This Year' : 'All Time'}</span>
+        </div>
 
-      <div className={styles.toggle}>
-        <button
-          type="button"
-          className={period === 'year' ? styles.toggleActive : styles.toggleBtn}
-          onClick={() => setPeriod('year')}
-        >
-          This Year
-        </button>
-        <button
-          type="button"
-          className={period === 'all' ? styles.toggleActive : styles.toggleBtn}
-          onClick={() => setPeriod('all')}
-        >
-          All Time
-        </button>
+        <div className={styles.toggle}>
+          <button
+            type="button"
+            className={period === 'year' ? styles.toggleActive : styles.toggleBtn}
+            onClick={() => setPeriod('year')}
+          >
+            This Year
+          </button>
+          <button
+            type="button"
+            className={period === 'all' ? styles.toggleActive : styles.toggleBtn}
+            onClick={() => setPeriod('all')}
+          >
+            All Time
+          </button>
+        </div>
       </div>
 
       {loading ? (
         <p className={styles.loading}>Loading…</p>
       ) : (
-        <ul className={styles.list}>
-          {leaderboard.map((e, i) => (
-            <li key={`${e.username}-${i}`} className={styles.row}>
-              <span className={styles.medal}>
-                {e.rank === 1 && <TrophyIcon color="gold" number={1} />}
-                {e.rank === 2 && <TrophyIcon color="silver" number={2} />}
-                {e.rank === 3 && <TrophyIcon color="bronze" number={3} />}
-                {e.rank > 3 && <RankNum rank={e.rank} />}
-              </span>
-              <span className={styles.name}>{e.username}</span>
-              <TrendArrow rank={e.rank} />
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className={styles.list}>
+            {top10.map((e, i) => (
+              <li
+                key={e.placeholder ? `placeholder-${i}` : `${e.username}-${i}`}
+                className={`${styles.row} ${e.username === me?.username ? styles.rowYou : ''}`}
+              >
+                <span className={styles.medal}>
+                  {e.rank === 1 && !e.placeholder && <TrophyIcon color="gold" number={1} />}
+                  {e.rank === 2 && !e.placeholder && <TrophyIcon color="silver" number={2} />}
+                  {e.rank === 3 && !e.placeholder && <TrophyIcon color="bronze" number={3} />}
+                  {(e.rank > 3 || e.placeholder) && <RankNum rank={e.rank} />}
+                </span>
+                <span className={styles.name}>{e.username}</span>
+                <TrendArrow rank={e.placeholder ? 0 : e.rank} />
+              </li>
+            ))}
+          </ul>
+          {showYouAtBottom && (
+            <div className={styles.youSection}>
+              <p className={styles.youLabel}>Your rank</p>
+              <div className={`${styles.row} ${styles.rowYouHighlight}`}>
+                <span className={styles.medal}>
+                  {myEntry && myEntry.rank > 3 && <RankNum rank={myEntry.rank} />}
+                  {myEntry && myEntry.rank <= 3 && myEntry.rank === 1 && <TrophyIcon color="gold" number={1} />}
+                  {myEntry && myEntry.rank <= 3 && myEntry.rank === 2 && <TrophyIcon color="silver" number={2} />}
+                  {myEntry && myEntry.rank <= 3 && myEntry.rank === 3 && <TrophyIcon color="bronze" number={3} />}
+                  {!myEntry && <span className={styles.rankNum}>—</span>}
+                </span>
+                <span className={styles.name}>{me?.username ?? 'You'}</span>
+                {myEntry ? <TrendArrow rank={myEntry.rank} /> : <span className={styles.trendNeutral}>—</span>}
+              </div>
+            </div>
+          )}
+        </>
       )}
       {!loading && leaderboard.length === 0 && (
         <p className={styles.empty}>No donors yet.</p>

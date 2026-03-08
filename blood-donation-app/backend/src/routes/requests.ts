@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { BloodRequest } from '../models/BloodRequest.js';
+import { Donation } from '../models/Donation.js';
 import { Hospital } from '../models/Hospital.js';
 import { User } from '../models/User.js';
 import { BLOOD_TYPES } from '../types.js';
@@ -12,7 +13,7 @@ const router = Router();
 
 const createRequestSchema = z.object({
   patientUsername: z.string().optional(),
-  patientName: z.string().min(1),
+  patientName: z.string().optional(),
   hospitalId: z.string().min(1),
   bloodTypeNeeded: z.enum(BLOOD_TYPES as unknown as [string, ...string[]]),
   unitsNeeded: z.number().int().positive().optional(),
@@ -38,6 +39,7 @@ router.post('/', async (req, res) => {
 
     const request = await BloodRequest.create({
       ...body,
+      patientName: body.patientName?.trim() || 'Anonymous',
       requiredBy: body.requiredBy ? new Date(body.requiredBy) : undefined,
       requestedByUserId,
     });
@@ -51,6 +53,40 @@ router.post('/', async (req, res) => {
     if (e instanceof z.ZodError) return res.status(400).json({ errors: e.errors });
     throw e;
   }
+});
+
+// Past requests created by the current user (all statuses)
+router.get('/my-past', async (req, res) => {
+  const userId = req.query.userId as string | undefined;
+  if (!userId) return res.status(400).json({ error: 'userId required' });
+  const requests = await BloodRequest.find({
+    requestedByUserId: userId,
+  })
+    .populate('hospitalId', 'name address')
+    .sort({ createdAt: -1 })
+    .lean();
+  const pendingIds = requests.filter((r) => r.status === 'pending').map((r) => r._id);
+  const activeDonations = await Donation.find({
+    requestId: { $in: pendingIds },
+    status: { $in: ['pledged', 'on_the_way'] },
+  })
+    .sort({ updatedAt: -1 })
+    .lean();
+  const statusByRequest = new Map<string, string>();
+  for (const d of activeDonations) {
+    const id = String(d.requestId);
+    if (!statusByRequest.has(id)) statusByRequest.set(id, d.status);
+  }
+  const list = requests.map((r) => ({
+    _id: r._id,
+    patientName: r.patientName ?? 'Anonymous',
+    bloodTypeNeeded: r.bloodTypeNeeded,
+    hospitalName: (r.hospitalId as { name?: string })?.name ?? '',
+    status: r.status,
+    createdAt: r.createdAt,
+    activeDonationStatus: r.status === 'pending' ? (statusByRequest.get(String(r._id)) ?? null) : null,
+  }));
+  res.json({ requests: list });
 });
 
 // Active requests near a point (for donor dashboard). Sort by blood type or distance.
@@ -141,6 +177,17 @@ router.get('/:id', async (req, res) => {
     .lean();
   if (!request) return res.status(404).json({ error: 'Request not found' });
 
+  let activeDonationStatus: string | null = null;
+  if (request.status === 'pending') {
+    const donation = await Donation.findOne({
+      requestId: request._id,
+      status: { $in: ['pledged', 'on_the_way'] },
+    })
+      .sort({ updatedAt: -1 })
+      .lean();
+    activeDonationStatus = donation?.status ?? null;
+  }
+
   const hospital = request.hospitalId as { location?: { coordinates: [number, number] } };
   const lng = req.query.lng != null ? parseFloat(String(req.query.lng)) : null;
   const lat = req.query.lat != null ? parseFloat(String(req.query.lat)) : null;
@@ -164,7 +211,7 @@ router.get('/:id', async (req, res) => {
     distanceKm = R * c;
   }
 
-  res.json({ ...request, distanceKm });
+  res.json({ ...request, distanceKm, activeDonationStatus });
 });
 
 export default router;

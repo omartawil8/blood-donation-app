@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:demo": "npx kill-port 3000 4000 2>/dev/null || true && concurrently \"npm run dev:demo:backend\" \"npm run dev:frontend\"",
+    "dev:phone": "npx kill-port 3000 4000 2>/dev/null || true && VITE_HOST=$(ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1 2>/dev/null || echo '127.0.0.1') npm run dev:demo",
     "dev:backend": "npm run dev --workspace=backend",
     "dev:demo:backend": "npm run dev:demo --workspace=backend",
     "dev:frontend": "npm run dev --workspace=frontend",

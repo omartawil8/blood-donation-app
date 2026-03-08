@@ -1,10 +1,24 @@
 .page {
   background: var(--white);
   min-height: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0 0 1.5rem;
   position: relative;
+  overflow: hidden;
+}
+
+.stickyTop {
+  flex-shrink: 0;
+  background: var(--white);
+}
+
+.formScroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 0 1.5rem;
 }
 
 .handle {
@@ -13,7 +27,6 @@
   background: var(--gray-300);
   border-radius: 2px;
   margin: 0.875rem auto 0;
-  flex-shrink: 0;
 }
 
 .sheetHeader {
@@ -21,7 +34,6 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 1.25rem 0.5rem;
-  flex-shrink: 0;
 }
 
 .backBtn {
@@ -49,7 +61,6 @@
   flex-direction: column;
   gap: 0;
   padding: 0.75rem 1.25rem 0;
-  flex: 1;
 }
 
 .field {

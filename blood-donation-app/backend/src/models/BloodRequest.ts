@@ -4,7 +4,7 @@ import type { BloodType, RequestStatus } from '../types.js';
 export interface IBloodRequest {
   _id: mongoose.Types.ObjectId;
   patientUsername?: string;
-  patientName: string;
+  patientName?: string;
   hospitalId: mongoose.Types.ObjectId;
   bloodTypeNeeded: BloodType;
   unitsNeeded?: number;
@@ -19,7 +19,7 @@ export interface IBloodRequest {
 const bloodRequestSchema = new Schema<IBloodRequest>(
   {
     patientUsername: { type: String },
-    patientName: { type: String, required: true },
+    patientName: { type: String },
     hospitalId: { type: Schema.Types.ObjectId, ref: 'Hospital', required: true },
     bloodTypeNeeded: { type: String, required: true, enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] },
     unitsNeeded: { type: Number },
